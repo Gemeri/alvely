@@ -14,7 +14,7 @@ from PyQt5.QtWidgets import (
     QApplication, QWidget, QVBoxLayout, QHBoxLayout, QLabel,
     QLineEdit, QScrollArea, QPushButton, QFrame, QStackedLayout, QSizePolicy,
     QShortcut, QMenu, QTextBrowser, QFileDialog, QComboBox, QSpacerItem,
-    QLayout, QGridLayout
+    QLayout, QGridLayout, QMainWindow, QTabWidget, QToolButton
 )
 from PyQt5.QtCore import (
     Qt, pyqtSignal, QObject, QThread, QTimer, QRegExp, QEvent, QSize, QRect, QPoint
@@ -1354,8 +1354,38 @@ class ChatApp(QWidget):
         event.accept()
 
 ###############################################################################
+class MainWindow(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle('Alvely')
+
+        self.tabs = QTabWidget()
+        self.tabs.setTabsClosable(True)
+        self.tabs.tabCloseRequested.connect(self.closeTab)
+
+        new_tab_btn = QToolButton()
+        new_tab_btn.setText('+')
+        new_tab_btn.clicked.connect(self.addTab)
+        self.tabs.setCornerWidget(new_tab_btn, Qt.TopRightCorner)
+
+        self.setCentralWidget(self.tabs)
+        self.addTab()
+
+    def addTab(self):
+        tab = ChatApp()
+        index = self.tabs.addTab(tab, f'Tab {self.tabs.count() + 1}')
+        self.tabs.setCurrentIndex(index)
+
+    def closeTab(self, index):
+        widget = self.tabs.widget(index)
+        self.tabs.removeTab(index)
+        if widget:
+            widget.deleteLater()
+        if self.tabs.count() == 0:
+            self.close()
+
 if __name__ == '__main__':
     app = QApplication(sys.argv)
-    chat_app = ChatApp()
-    chat_app.show()
+    window = MainWindow()
+    window.show()
     sys.exit(app.exec_())
