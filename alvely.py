@@ -1363,8 +1363,40 @@ class MainWindow(QMainWindow):
         self.tabs.setTabsClosable(True)
         self.tabs.tabCloseRequested.connect(self.closeTab)
 
+        self.tabs.setStyleSheet("""
+            QTabWidget::pane {
+                border: none;
+                background-color: #1E1E1E;
+            }
+            QTabBar::tab {
+                background-color: #333333;
+                color: white;
+                padding: 5px 10px;
+                border-top-left-radius: 4px;
+                border-top-right-radius: 4px;
+                margin-right: 2px;
+            }
+            QTabBar::tab:selected {
+                background-color: #2A2A2A;
+            }
+            QTabBar::tab:hover {
+                background-color: #444444;
+            }
+        """)
+
         new_tab_btn = QToolButton()
         new_tab_btn.setText('+')
+        new_tab_btn.setStyleSheet("""
+            QToolButton {
+                background-color: #333333;
+                color: white;
+                border-radius: 4px;
+                padding: 2px 6px;
+            }
+            QToolButton:hover {
+                background-color: #444444;
+            }
+        """)
         new_tab_btn.clicked.connect(self.addTab)
         self.tabs.setCornerWidget(new_tab_btn, Qt.TopRightCorner)
 
